@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { UserRound } from 'lucide-react';
 
 export function Header() {
@@ -12,7 +13,9 @@ export function Header() {
         </button>
       </div>
       <nav className="flex justify-between p-2 items-center">
-        <Image src="/img/logo.png" alt="logo" width={80} height={80} />
+        <Link href="/">
+          <Image src="/img/logo.png" alt="logo" width={80} height={80} />
+        </Link>
         <div>
           <ul className="flex gap-3">
             <li className="text-hover">Home</li>
