@@ -4,6 +4,13 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Kanit', sans-serif;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -12,7 +19,6 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Kanit', sans-serif;
 }
 
 .max-width {
@@ -20,9 +26,14 @@ body {
 }
 
 .padding-x {
-  @apply sm:px-16 px-6;
+  @apply max-md:px-16 px-3;
 }
 
 .padding-y {
   @apply py-4;
+}
+
+/* Text */
+.text-hover {
+  @apply hover:opacity-60 transition cursor-pointer;
 }
