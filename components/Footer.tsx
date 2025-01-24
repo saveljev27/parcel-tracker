@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export function Footer() {
   return (
-    <footer className="mb-10">
+    <footer>
       <div className="flex justify-between mt-8">
         <Image src="/img/logo.png" alt="logo" width={80} height={80} />
         <div>

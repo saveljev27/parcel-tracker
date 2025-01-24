@@ -4,7 +4,7 @@ import { UserRound } from 'lucide-react';
 
 export function Header() {
   return (
-    <header>
+    <header className="mb-8">
       <div className="flex justify-between border-b-2 p-2 items-center justify-items-center">
         <div>English</div>
         <button className="bg-primary py-2 px-4 rounded-xl text-hover text-sm flex gap-2">

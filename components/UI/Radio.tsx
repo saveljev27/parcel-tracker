@@ -1,25 +1,22 @@
-import { useState } from 'react';
 import { RadioOption } from '@/constants/radio';
-import { on } from 'events';
 
 export function Radio({
   options,
+  selectedOption,
   onSelect,
 }: {
   options: RadioOption[];
+  selectedOption: string | undefined;
   onSelect: (params: { value: string; name: string }) => void;
 }) {
-  const [selectedOption, setSelectedOption] = useState<string>();
-
   return (
     <div className="flex flex-col gap-4">
       {options.map(({ label, value, info, name }) => (
         <div
-          className={`p-4 bg-black/5 rounded-lg shadow-lg  max-w-md hover:bg-black/10 transition cursor-pointer border ${
+          className={`p-4 bg-black/5 rounded-lg shadow-lg max-w-[400px] hover:bg-black/10 transition cursor-pointer border ${
             selectedOption === value ? ' border-primary' : ''
           }`}
           onClick={() => {
-            setSelectedOption(value);
             onSelect({
               value,
               name,
