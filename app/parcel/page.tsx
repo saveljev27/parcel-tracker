@@ -1,12 +1,15 @@
 'use client';
 
-import { Radio } from '@/components/UI/Radio';
+import { GoogleMap } from '@/components';
+import { ButtonWithoutLink, Radio } from '@/components/UI';
 import { carrierOptions, deliveryOptions } from '@/constants/radio';
 import { useState } from 'react';
 
 export default function Parcel() {
-  const [selectedDelivery, setSelectedDelivery] = useState<string>();
-  const [selectedCarrier, setSelectedCarrier] = useState<string>();
+  const [selectedDelivery, setSelectedDelivery] = useState<string>('baltics');
+  const [selectedCarrier, setSelectedCarrier] = useState<string>('postoffice');
+  const [selectedAddress, setSelectedAddress] = useState<string>('');
+  const [selectedCountry, setSelectedCountry] = useState<string>('');
 
   const handleSelectedValue = ({
     value,
@@ -19,9 +22,13 @@ export default function Parcel() {
     name === 'carrier' && setSelectedCarrier(value);
   };
 
+  const handleAddress = (address: string) => {
+    setSelectedAddress(address);
+  };
+
   return (
-    <div className="flex min-h-[60vh]">
-      <div className="grow">
+    <div className="flex gap-5 min-h-[60vh]">
+      <div>
         <h1 className="text-4xl font-bold">Register shipment</h1>
         <section className="px-4 mt-5">
           <Radio
@@ -72,27 +79,34 @@ export default function Parcel() {
                     >
                       Country
                     </label>
-                    <select id="balticscountries" name="balticscountries">
-                      <option value="Latvia" defaultValue={'Latvia'}>
+                    <select
+                      id="balticscountries"
+                      name="balticscountries"
+                      onChange={(e) => setSelectedCountry(e.target.value)}
+                    >
+                      <option value="LV" defaultValue={'LV'}>
                         Latvia
                       </option>
-                      <option value="Lithuania">Lithuania</option>
-                      <option value="Estonia">Estonia</option>
+                      <option value="LT">Lithuania</option>
+                      <option value="EE">Estonia</option>
                     </select>
                   </div>
                 )}
                 <input
-                  placeholder="Search destination"
+                  placeholder="Select Post Office On Map"
                   className="border rounded-md p-4 w-[400px] shadow-lg"
                   type="text"
+                  value={selectedAddress || ''}
+                  readOnly
                 />
               </div>
             </div>
           </div>
+          <ButtonWithoutLink color="primary mt-4">Continue</ButtonWithoutLink>
         </section>
       </div>
       <div className="grow">
-        <div className="bg-primary rounded-md flex flex-col p-4">
+        <div className="bg-primary rounded-t-lg flex flex-col p-4">
           {selectedDelivery && (
             <span className="text-xl ">Delivery: {selectedDelivery}</span>
           )}
@@ -100,6 +114,9 @@ export default function Parcel() {
             <span className="text-xl">Carrier: {selectedCarrier}</span>
           )}
         </div>
+        {selectedDelivery == 'baltics' && selectedCarrier == 'postoffice' && (
+          <GoogleMap onSelect={handleAddress} country={selectedCountry} />
+        )}
       </div>
     </div>
   );

@@ -1,9 +1,30 @@
-export default function Button({ onClick }: { onClick?: () => void }) {
+import Link from 'next/link';
+
+interface ButtonProps {
+  children: React.ReactNode;
+  color: string;
+  link?: string;
+  classList?: string;
+}
+
+export function Button({ children, color, link, classList }: ButtonProps) {
   return (
-    <div className="flex flex-col gap-5">
-      <button onClick={onClick} className="bg-primary py-2 px-4 rounded-xl">
-        Click on me
+    <Link href={link || '/'} className={classList || ''}>
+      <button
+        className={`bg-${color} py-2 px-4 rounded-xl hover:bg-opacity-60 transition`}
+      >
+        <span className="text-lg">{children}</span>
       </button>
-    </div>
+    </Link>
+  );
+}
+
+export function ButtonWithoutLink({ children, color }: ButtonProps) {
+  return (
+    <button
+      className={`bg-${color} py-2 px-4 rounded-xl hover:bg-opacity-60 transition`}
+    >
+      <span className="text-lg">{children}</span>
+    </button>
   );
 }
