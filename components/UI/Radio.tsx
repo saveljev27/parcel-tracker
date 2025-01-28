@@ -10,10 +10,10 @@ export function Radio({
   onSelect: (params: { value: string; name: string }) => void;
 }) {
   return (
-    <div className="flex flex-col gap-4 max-w-[400px]">
+    <div className="flex flex-col gap-4 max-w-[450px]">
       {options.map(({ label, value, info, name }) => (
         <div
-          className={`p-4 bg-black/5 rounded-lg shadow-lg w-[400px] hover:bg-black/10 transition cursor-pointer border ${
+          className={`p-4 bg-black/5 rounded-lg shadow-lg w-[450px] hover:bg-black/10 transition cursor-pointer border ${
             selectedOption === value ? ' border-primary' : ''
           }`}
           onClick={() => {

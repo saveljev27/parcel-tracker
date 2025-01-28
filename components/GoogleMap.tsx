@@ -13,10 +13,8 @@ import {
 
 import { locations } from '@/constants/locations';
 
-const data = locations;
-
-const Z_INDEX_SELECTED = data.length;
-const Z_INDEX_HOVER = data.length + 1;
+const Z_INDEX_SELECTED = locations.length;
+const Z_INDEX_HOVER = locations.length + 1;
 
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string;
 
@@ -27,7 +25,7 @@ export const GoogleMap = ({
   onSelect: (address: string) => void;
   country: string;
 }) => {
-  const [markers] = useState(data);
+  const [markers] = useState(locations);
 
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -38,27 +36,27 @@ export const GoogleMap = ({
     lng: 24.4137440312884,
   });
 
-  useEffect(() => {
-    switch (country) {
-      case 'LV':
-        setSelectedDeffaultCenter({
-          lat: 56.958852895069974,
-          lng: 24.4137440312884,
-        });
-        break;
-      case 'LT':
-        setSelectedDeffaultCenter({
-          lat: 55.48586566672153,
-          lng: 23.81379945204358,
-        });
-        break;
-      case 'EE':
-        setSelectedDeffaultCenter({
-          lat: 58.79110468388559,
-          lng: 25.627910663161515,
-        });
-    }
-  }, [country]);
+  // useEffect(() => {
+  //   switch (country) {
+  //     case 'LV':
+  //       setSelectedDeffaultCenter({
+  //         lat: 56.958852895069974,
+  //         lng: 24.4137440312884,
+  //       });
+  //       break;
+  //     case 'LT':
+  //       setSelectedDeffaultCenter({
+  //         lat: 55.48586566672153,
+  //         lng: 23.81379945204358,
+  //       });
+  //       break;
+  //     case 'EE':
+  //       setSelectedDeffaultCenter({
+  //         lat: 58.79110468388559,
+  //         lng: 25.627910663161515,
+  //       });
+  //   }
+  // }, [country]);
 
   const [selectedMarker, setSelectedMarker] =
     useState<google.maps.marker.AdvancedMarkerElement | null>(null);
@@ -95,22 +93,27 @@ export const GoogleMap = ({
   );
 
   return (
-    <APIProvider apiKey={API_KEY} libraries={['marker']}>
+    <APIProvider
+      apiKey={API_KEY}
+      libraries={['marker']}
+      onLoad={() => console.log('Map loaded')}
+    >
       <Map
         mapId={process.env.NEXT_PUBLIC_MAP_ID as string}
+        defaultCenter={selectedDeffaultCenter}
         defaultZoom={7}
-        center={selectedDeffaultCenter}
         gestureHandling={'greedy'}
         onClick={onMapClick}
         clickableIcons={false}
-        disableDefaultUI
         style={{
           boxShadow:
             '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
         }}
+        disableDefaultUI
       >
-        {markers.map(
-          ({ id, zIndex: zIndexDefault, position, address, key }) => {
+        {markers
+          .filter((marker) => marker.country === country)
+          .map(({ id, zIndex: zIndexDefault, position, address, key }) => {
             let zIndex = zIndexDefault;
 
             if (hoverId === id) {
@@ -145,14 +148,13 @@ export const GoogleMap = ({
                 position={position}
               >
                 <Pin
-                  background={selectedId === id ? '#22ccff' : null}
-                  borderColor={selectedId === id ? '#1e89a1' : null}
+                  background={selectedId === id ? '#F86300' : '#FFBC01'}
+                  borderColor={selectedId === id ? '#FFBC01' : '#F86300'}
                   glyphColor={selectedId === id ? '#0f677a' : null}
                 />
               </AdvancedMarkerWithRef>
             );
-          }
-        )}
+          })}
 
         {infoWindowShown && selectedMarker && (
           <InfoWindow

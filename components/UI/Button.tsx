@@ -5,6 +5,7 @@ interface ButtonProps {
   color: string;
   link?: string;
   classList?: string;
+  onClick?: () => void;
 }
 
 export function Button({ children, color, link, classList }: ButtonProps) {
@@ -19,10 +20,11 @@ export function Button({ children, color, link, classList }: ButtonProps) {
   );
 }
 
-export function ButtonWithoutLink({ children, color }: ButtonProps) {
+export function ButtonWithoutLink({ children, color, onClick }: ButtonProps) {
   return (
     <button
-      className={`bg-${color} py-2 px-4 rounded-xl hover:bg-opacity-60 transition`}
+      className={`bg-${color} py-2 px-4 rounded-xl hover:bg-opacity-60 transition shadow-lg`}
+      onClick={onClick}
     >
       <span className="text-lg">{children}</span>
     </button>

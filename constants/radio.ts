@@ -30,7 +30,7 @@ export const carrierOptions = [
   {
     label: 'Courier',
     value: 'courier',
-    info: '3€',
+    info: '10€',
     name: 'carrier',
   },
 ];
