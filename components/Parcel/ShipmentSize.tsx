@@ -12,6 +12,7 @@ export default function ShipmentSize({
       {shipmentsSizes.map(({ size, price, label }) => (
         <div
           onClick={() => onSelect({ label, price })}
+          key={label}
           className={`flex flex-col p-2 bg-black/5 rounded-lg shadow-lg hover:bg-black/10 transition cursor-pointer border ${
             selectedShipment === label ? 'border-primary' : ''
           }`}

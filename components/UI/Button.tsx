@@ -23,7 +23,7 @@ export function Button({ children, color, link, classList }: ButtonProps) {
 export function ButtonWithoutLink({ children, color, onClick }: ButtonProps) {
   return (
     <button
-      className={`bg-${color} py-2 px-4 rounded-xl hover:bg-opacity-60 transition shadow-lg`}
+      className={`bg-${color} px-4 py-2 mx-4 rounded-xl hover:bg-opacity-60 transition shadow-lg`}
       onClick={onClick}
     >
       <span className="text-lg">{children}</span>
