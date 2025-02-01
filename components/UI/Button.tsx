@@ -5,6 +5,7 @@ interface ButtonProps {
   color: string;
   link?: string;
   classList?: string;
+  type?: 'button' | 'submit' | 'reset' | undefined;
   onClick?: () => void;
 }
 
@@ -20,11 +21,17 @@ export function Button({ children, color, link, classList }: ButtonProps) {
   );
 }
 
-export function ButtonWithoutLink({ children, color, onClick }: ButtonProps) {
+export function ButtonWithoutLink({
+  children,
+  color,
+  onClick,
+  type,
+}: ButtonProps) {
   return (
     <button
       className={`bg-${color} px-4 py-2 mx-4 rounded-xl hover:bg-opacity-60 transition shadow-lg`}
       onClick={onClick}
+      type={type ? type : 'button'}
     >
       <span className="text-lg">{children}</span>
     </button>

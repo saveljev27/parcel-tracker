@@ -41,6 +41,7 @@ export function Radio({
             checked={selectedOption === value}
             onChange={() => onSelect({ value, name })}
             className="hidden"
+            required
           />
         </div>
       ))}

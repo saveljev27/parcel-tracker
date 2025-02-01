@@ -1,6 +1,6 @@
 import { shipmentsSizes } from '@/constants/shipmentsizes';
 
-export default function ShipmentSize({
+export function ShipmentSize({
   selectedShipment,
   onSelect,
 }: {
@@ -18,10 +18,20 @@ export default function ShipmentSize({
           }`}
         >
           <div className="flex justify-between">
-            <p>{label}</p>
+            <label htmlFor={label}>{label}</label>
             <p className="text-sm">{price}€</p>
           </div>
           <span className="text-sm">{size}</span>
+          <input
+            type="radio"
+            name="shipmentSize"
+            id={label}
+            value={label}
+            checked={selectedShipment === label}
+            onChange={() => onSelect({ label, price })}
+            className="hidden"
+            required
+          />
         </div>
       ))}
     </div>

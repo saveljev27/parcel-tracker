@@ -37,3 +37,7 @@ body {
 .text-hover {
   @apply hover:opacity-60 transition cursor-pointer;
 }
+
+input {
+  @apply border rounded-md p-4 w-[450px] shadow-lg;
+}

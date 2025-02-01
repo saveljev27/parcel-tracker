@@ -17,8 +17,10 @@ export default function ProccessHeadings({
     <div className="flex mt-4 px-4 justify-between">
       <h1>
         <span
-          className={`font-bold rounded-full px-2 mr-2 text-sm text-white border ${
-            status ? 'bg-secondary' : 'bg-none text-black border-black'
+          className={`font-bold rounded-full px-2 mr-2 text-sm border ${
+            status
+              ? 'bg-secondary text-white'
+              : 'bg-none text-gray-600 border-gray-600'
           }`}
         >
           {number}

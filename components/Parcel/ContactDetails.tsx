@@ -13,51 +13,51 @@ export function ContactDetails() {
       <div className="flex flex-col gap-4">
         <input
           placeholder="Name and Surname"
-          className={`border rounded-md p-4 w-[450px] shadow-lg ${
-            senderName.length ? 'border-primary' : ''
-          }`}
+          name="senderName"
+          className={`${senderName.length ? 'border-primary' : ''}`}
           type="text"
           value={senderName || ''}
           onChange={(e) => setSenderName(e.target.value)}
+          required
         />
         <input
           placeholder="Email"
-          className={`border rounded-md p-4 w-[450px] shadow-lg ${
-            senderEmail.length ? 'border-primary' : ''
-          }`}
+          name="senderEmail"
+          className={`${senderEmail.length ? 'border-primary' : ''}`}
           type="text"
           value={senderEmail || ''}
           onChange={(e) => setSenderEmail(e.target.value)}
+          required
         />
         <input
           placeholder="Phone number"
-          className={`border rounded-md p-4 w-[450px] shadow-lg ${
-            senderPhone.length ? 'border-primary' : ''
-          }`}
+          name="senderPhone"
+          className={`${senderPhone.length ? 'border-primary' : ''}`}
           type="text"
           value={senderPhone || ''}
           onChange={(e) => setSenderPhone(e.target.value)}
+          required
         />
       </div>
       <h1 className="text-lg mt-4 mb-3">Receiver</h1>
       <div className="flex flex-col gap-4">
         <input
           placeholder="Name and Surname"
-          className={`border rounded-md p-4 w-[450px] shadow-lg ${
-            receiverName.length ? 'border-primary' : ''
-          }`}
+          name="receiverName"
+          className={`${receiverName.length ? 'border-primary' : ''}`}
           type="text"
           value={receiverName || ''}
           onChange={(e) => setReceiverName(e.target.value)}
+          required
         />
         <input
           placeholder="Phone number"
-          className={`border rounded-md p-4 w-[450px] shadow-lg ${
-            receiverPhone.length ? 'border-primary' : ''
-          }`}
+          name="receiverPhone"
+          className={`${receiverPhone.length ? 'border-primary' : ''}`}
           type="text"
           value={receiverPhone || ''}
           onChange={(e) => setReceiverPhone(e.target.value)}
+          required
         />
       </div>
     </section>
