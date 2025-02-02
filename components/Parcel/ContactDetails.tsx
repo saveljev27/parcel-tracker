@@ -1,11 +1,33 @@
 import React, { useState } from 'react';
+import { ButtonWithoutLink } from '../UI';
+import { validation } from '@/lib/validation';
 
-export function ContactDetails() {
-  const [senderName, setSenderName] = useState<string>('');
-  const [senderEmail, setSenderEmail] = useState<string>('');
-  const [senderPhone, setSenderPhone] = useState<string>('');
-  const [receiverName, setReceiverName] = useState<string>('');
-  const [receiverPhone, setReceiverPhone] = useState<string>('');
+interface ShipmentDetailsProps {
+  isCompleted: (boolean: boolean) => void;
+  isActive: (boolean: boolean) => void;
+}
+
+export function ContactDetails({
+  isCompleted,
+  isActive,
+}: ShipmentDetailsProps) {
+  const [contactDetails, setContactDetails] = useState({
+    senderName: '',
+    senderEmail: '',
+    senderPhone: '',
+    receiverName: '',
+    receiverPhone: '',
+  });
+  const [errors, setErrors] = useState('');
+
+  const handleData = (value: string) => {
+    const validationMessage = validation(value, contactDetails);
+    if (validationMessage) {
+      setErrors(validationMessage);
+    }
+    isCompleted(true);
+    isActive(true);
+  };
 
   return (
     <section className="px-4">
@@ -14,28 +36,46 @@ export function ContactDetails() {
         <input
           placeholder="Name and Surname"
           name="senderName"
-          className={`${senderName.length ? 'border-primary' : ''}`}
+          className={`${
+            contactDetails.senderName.length ? 'border-primary' : ''
+          }`}
           type="text"
-          value={senderName || ''}
-          onChange={(e) => setSenderName(e.target.value)}
+          value={contactDetails.senderName || ''}
+          onChange={(e) =>
+            setContactDetails({ ...contactDetails, senderName: e.target.value })
+          }
           required
         />
         <input
           placeholder="Email"
           name="senderEmail"
-          className={`${senderEmail.length ? 'border-primary' : ''}`}
+          className={`${
+            contactDetails.senderEmail.length ? 'border-primary' : ''
+          }`}
           type="text"
-          value={senderEmail || ''}
-          onChange={(e) => setSenderEmail(e.target.value)}
+          value={contactDetails.senderEmail || ''}
+          onChange={(e) =>
+            setContactDetails({
+              ...contactDetails,
+              senderEmail: e.target.value,
+            })
+          }
           required
         />
         <input
           placeholder="Phone number"
           name="senderPhone"
-          className={`${senderPhone.length ? 'border-primary' : ''}`}
+          className={`${
+            contactDetails.senderPhone.length ? 'border-primary' : ''
+          }`}
           type="text"
-          value={senderPhone || ''}
-          onChange={(e) => setSenderPhone(e.target.value)}
+          value={contactDetails.senderPhone || ''}
+          onChange={(e) =>
+            setContactDetails({
+              ...contactDetails,
+              senderPhone: e.target.value,
+            })
+          }
           required
         />
       </div>
@@ -44,22 +84,43 @@ export function ContactDetails() {
         <input
           placeholder="Name and Surname"
           name="receiverName"
-          className={`${receiverName.length ? 'border-primary' : ''}`}
+          className={`${
+            contactDetails.receiverName.length ? 'border-primary' : ''
+          }`}
           type="text"
-          value={receiverName || ''}
-          onChange={(e) => setReceiverName(e.target.value)}
+          value={contactDetails.receiverName || ''}
+          onChange={(e) =>
+            setContactDetails({
+              ...contactDetails,
+              receiverName: e.target.value,
+            })
+          }
           required
         />
         <input
           placeholder="Phone number"
           name="receiverPhone"
-          className={`${receiverPhone.length ? 'border-primary' : ''}`}
+          className={`${
+            contactDetails.receiverPhone.length ? 'border-primary' : ''
+          }`}
           type="text"
-          value={receiverPhone || ''}
-          onChange={(e) => setReceiverPhone(e.target.value)}
+          value={contactDetails.receiverPhone || ''}
+          onChange={(e) =>
+            setContactDetails({
+              ...contactDetails,
+              receiverPhone: e.target.value,
+            })
+          }
           required
         />
       </div>
+      {errors && <p className="text-red-600 px-4 mt-2">{errors}</p>}
+      <ButtonWithoutLink
+        color="primary mt-4"
+        onClick={() => handleData('contactDetails')}
+      >
+        Continue
+      </ButtonWithoutLink>
     </section>
   );
 }

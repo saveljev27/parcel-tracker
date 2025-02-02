@@ -1,31 +1,49 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { carrierOptions, deliveryOptions } from '@/constants/radio';
-import { Radio } from '../UI';
+import { ButtonWithoutLink, Radio } from '../UI';
 import { ShipmentSize } from './ShipmentSize';
 import { AddressInput } from './AddressInput';
+import { error } from 'console';
+import { validation } from '@/lib/validation';
 
 interface ShipmentDetailsProps {
   selectedCountry: (country: string) => void;
   selectedAddress?: (address: string) => void;
+  selectedShipment: (shipment: { label: string; price: number }) => void;
   mapActive: (boolean: boolean) => void;
-  setPrice: (price: number) => void;
   isCourier: (boolean: boolean) => void;
+  isCompleted: (boolean: boolean) => void;
+  isActive: (boolean: boolean) => void;
   address: string;
+  shipment: string;
 }
 
 export function ShipmentDetails({
   selectedCountry,
   selectedAddress,
+  selectedShipment,
   mapActive,
-  setPrice,
   isCourier,
+  isCompleted,
+  isActive,
   address,
+  shipment,
 }: ShipmentDetailsProps) {
-  const [selectedDelivery, setSelectedDelivery] = useState<string>('baltics');
-  const [selectedCarrier, setSelectedCarrier] = useState<string>('postoffice');
-  const [selectedShipment, setSelectedShipment] = useState<string>('');
+  const [deliveryDetails, setDeliveryDetails] = useState({
+    delivery: 'baltics',
+    carrier: 'postoffice',
+    pickupAddress: '',
+    balticCountry: 'LV',
+    sendAddress: '',
+    shipment: '',
+  });
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    setDeliveryDetails({ ...deliveryDetails, sendAddress: address });
+  }, [address]);
 
   const handleDeliveryOrCarrier = ({
     value,
@@ -35,9 +53,22 @@ export function ShipmentDetails({
     name: string;
   }) => {
     mapActive(false);
-    name === 'delivery' && setSelectedDelivery(value);
-    name === 'carrier' && setSelectedCarrier(value);
+    name === 'delivery' &&
+      setDeliveryDetails({ ...deliveryDetails, delivery: value });
+    name === 'carrier' &&
+      setDeliveryDetails({ ...deliveryDetails, carrier: value });
     value === 'courier' && isCourier(true);
+  };
+
+  const handleData = (value: string) => {
+    const validationMessage = validation(value, deliveryDetails);
+
+    if (validationMessage) {
+      setError(validationMessage);
+      return;
+    }
+    isCompleted(true);
+    isActive(true);
   };
 
   const handleShimpent = ({
@@ -47,14 +78,15 @@ export function ShipmentDetails({
     label: string;
     price: number;
   }) => {
-    setSelectedShipment(label);
-    setPrice(price);
+    selectedShipment({ label, price });
+    setDeliveryDetails({ ...deliveryDetails, shipment: label });
   };
 
   const handleMapOpen = () => {
     if (
-      selectedDelivery === 'baltics' &&
-      (selectedCarrier === 'postoffice' || selectedCarrier === 'courier')
+      deliveryDetails.delivery === 'baltics' &&
+      (deliveryDetails.carrier === 'postoffice' ||
+        deliveryDetails.carrier === 'courier')
     )
       mapActive(true);
   };
@@ -64,18 +96,18 @@ export function ShipmentDetails({
       <div className="mt-5 mb-5">
         <Radio
           options={deliveryOptions}
-          selectedOption={selectedDelivery}
+          selectedOption={deliveryDetails.delivery}
           onSelect={handleDeliveryOrCarrier}
         />
       </div>
       <h1 className="text-lg mt-3 mb-3">How will you send your parcel?</h1>
       <Radio
         options={carrierOptions}
-        selectedOption={selectedCarrier}
+        selectedOption={deliveryDetails.carrier}
         onSelect={handleDeliveryOrCarrier}
       />
       <div className="mt-5 max-w-[450px] ">
-        {selectedCarrier === 'courier' && (
+        {deliveryDetails.carrier === 'courier' && (
           <>
             <h1 className="text-lg mt-3 mb-3">
               Where can the courier pick up your shipment?
@@ -83,6 +115,9 @@ export function ShipmentDetails({
             <AddressInput
               inputname="pickupAddress"
               placeholder="Enter your pickup address"
+              setPlace={(place) =>
+                setDeliveryDetails({ ...deliveryDetails, pickupAddress: place })
+              }
             />
           </>
         )}
@@ -91,26 +126,33 @@ export function ShipmentDetails({
             Where are you sending your parcel?
           </h1>
           <div>
-            {selectedDelivery === 'international' && (
+            {deliveryDetails.delivery === 'international' && (
               <AddressInput
                 inputname="sendAddress"
                 placeholder="Enter your shipment address"
+                setPlace={(place) =>
+                  setDeliveryDetails({ ...deliveryDetails, sendAddress: place })
+                }
               />
             )}
-            {selectedDelivery === 'baltics' && (
+            {deliveryDetails.delivery === 'baltics' && (
               <div className="flex gap-2">
                 <div className="flex flex-col justify-center border max-w-[30%] p-1 rounded-lg shadow-lg transition cursor-pointer ">
                   <label
                     className="text-sm ml-1 text-gray-500"
-                    htmlFor="balticscountries"
+                    htmlFor="balticCountry"
                   >
                     Country
                   </label>
                   <select
-                    id="balticscountries"
-                    name="balticscountries"
+                    id="balticCountry"
+                    name="balticCountry"
                     onChange={(e) => {
                       selectedCountry(e.target.value);
+                      setDeliveryDetails({
+                        ...deliveryDetails,
+                        balticCountry: e.target.value,
+                      });
                     }}
                   >
                     <option value="LV" defaultValue={'LV'}>
@@ -143,11 +185,18 @@ export function ShipmentDetails({
             <h1 className="text-lg mt-4 mb-3">What size is your shipment?</h1>
             <ShipmentSize
               onSelect={handleShimpent}
-              selectedShipment={selectedShipment}
+              selectedShipment={shipment}
             />
           </div>
         )}
       </div>
+      {error && <p className="text-red-600 px-4 mt-2">{error}</p>}
+      <ButtonWithoutLink
+        color="primary mt-4 mb-4"
+        onClick={() => handleData('shipmentDetails')}
+      >
+        Continue
+      </ButtonWithoutLink>
     </div>
   );
 }

@@ -18,7 +18,9 @@ export async function createShipment(formData: FormData) {
     pickupAddress: data.pickupAddress
       ? (data.pickupAddress as string)
       : undefined,
-    balticscountries: data.balticscountries,
+    balticCountry: data.balticCountry
+      ? (data.balticCountry as string)
+      : undefined,
     receiverName: data.receiverName,
     receiverPhone: data.receiverPhone,
     sendAddress: data.sendAddress,
@@ -26,7 +28,7 @@ export async function createShipment(formData: FormData) {
     senderName: data.senderName,
     senderPhone: data.senderPhone,
     shipmentSize: data.shipmentSize,
-    totalPrice: parseFloat(data.totalPrice as string),
+    totalPrice: parseFloat(data.totalPrice as string) || 0,
   };
 
   try {

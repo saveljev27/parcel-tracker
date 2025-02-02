@@ -18,7 +18,7 @@ model Shipment {
   cardHolder      String   
   cardNumber      String  
   carrier         String   
-  balticscountries String
+  balticCountry   String?
   delivery        String   
   pickupAddress   String?   
   receiverName    String   
@@ -28,7 +28,7 @@ model Shipment {
   senderName      String   
   senderPhone     String   
   shipmentSize    String  
-  totalPrice      String    
+  totalPrice      Float    
   
   createdAt       DateTime @default(now())  
   updatedAt       DateTime @updatedAt   

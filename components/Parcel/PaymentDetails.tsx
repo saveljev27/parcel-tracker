@@ -1,4 +1,8 @@
-export default function PaymentDetails() {
+interface PaymentDetailsProps {
+  isActive: (boolean: boolean) => void;
+}
+
+export default function PaymentDetails({ isActive }: PaymentDetailsProps) {
   return (
     <section className="px-4">
       <h1 className="text-lg mt-4 mb-3">Stripe</h1>

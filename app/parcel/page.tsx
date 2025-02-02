@@ -10,49 +10,46 @@ import { useState } from 'react';
 import { createShipment } from '../actions';
 
 export default function Parcel() {
-  const [selectedAddress, setSelectedAddress] = useState<string>('');
-  const [selectedCountry, setSelectedCountry] = useState<string>('LV');
-  const [mapActive, setMapActive] = useState<boolean>(false);
-  const [isCourier, setIsCourier] = useState<boolean>(false);
-  const [price, setPrice] = useState<number>(0);
-
-  const [shipmentDetails, setShipmentDetails] = useState<boolean>(true);
-  const [contactDetails, setContactDetails] = useState<boolean>(false);
-  const [paymentDetails, setPaymentDetails] = useState<boolean>(false);
+  const [formData, setFormData] = useState({
+    selectedAddress: '',
+    selectedCountry: 'LV',
+    selectedShipment: { label: '', price: 0 },
+    mapActive: false,
+    courier: false,
+  });
+  const [parcelDetails, setParcelDetails] = useState({
+    shipmentDetails: true,
+    contactDetails: false,
+    paymentDetails: false,
+    shipmentDetailsCompleted: false,
+    contactDetailsCompleted: false,
+    paymentDetailsCompleted: false,
+  });
 
   const handleAddress = (address: string) => {
-    setSelectedAddress(address);
+    setFormData({ ...formData, selectedAddress: address });
   };
-
-  const handleShipmentFormStatus = (value: string) => {
-    switch (value) {
-      case 'shipmentDetails':
-        setShipmentDetails(true);
-        setContactDetails(false);
-        setPaymentDetails(false);
-        break;
-      case 'contactDetails':
-        setMapActive(false);
-        setShipmentDetails(false);
-        setContactDetails(true);
-        setPaymentDetails(false);
-        break;
-      case 'paymentDetails':
-        setMapActive(false);
-        setShipmentDetails(false);
-        setContactDetails(false);
-        setPaymentDetails(true);
-        break;
-      default:
-        'shipmentDetails';
-    }
-  };
-
   const handleSend = (FormData: FormData) => {
     createShipment(FormData);
   };
+  const updateStepStatus = (step: string, completed: boolean) => {
+    setParcelDetails((prevState) => ({
+      ...prevState,
+      [`${step}Completed`]: completed,
+    }));
+  };
+  const switchStep = (currentStep: string) => {
+    setParcelDetails((prevState) => ({
+      ...prevState,
+      shipmentDetails: currentStep === 'shipmentDetails',
+      contactDetails: currentStep === 'contactDetails',
+      paymentDetails: currentStep === 'paymentDetails',
+    }));
+  };
 
-  const totalPrice = isCourier ? price + 10 : price;
+  const totalPrice = formData.courier
+    ? formData.selectedShipment.price + 10
+    : formData.selectedShipment.price;
 
   return (
     <form action={handleSend}>
@@ -61,57 +58,79 @@ export default function Parcel() {
           <h1 className="text-4xl font-bold">Register shipment</h1>
 
           <ProccessHeadings
-            status={shipmentDetails}
+            status={{
+              active: parcelDetails.shipmentDetails,
+              completed: parcelDetails.shipmentDetailsCompleted,
+            }}
+            handleClick={() => switchStep('shipmentDetails')}
             heading="Shipment details"
-            handleClick={() => handleShipmentFormStatus('shipmentDetails')}
             number="1"
           />
-          <div className={shipmentDetails ? '' : 'hidden'}>
+          <div className={parcelDetails.shipmentDetails ? '' : 'hidden'}>
             <ShipmentDetails
-              selectedCountry={(country: string) => setSelectedCountry(country)}
-              selectedAddress={(address: string) => setSelectedAddress(address)}
-              mapActive={(boolean: boolean) => setMapActive(boolean)}
-              setPrice={(price: number) => setPrice(price)}
-              isCourier={(boolean: boolean) => setIsCourier(boolean)}
-              address={selectedAddress}
+              selectedCountry={(country: string) =>
+                setFormData({ ...formData, selectedCountry: country })
+              }
+              selectedAddress={(address: string) =>
+                setFormData({ ...formData, selectedAddress: address })
+              }
+              selectedShipment={(shipment: { label: string; price: number }) =>
+                setFormData({ ...formData, selectedShipment: shipment })
+              }
+              mapActive={(boolean: boolean) =>
+                setFormData({ ...formData, mapActive: boolean })
+              }
+              isCourier={(boolean: boolean) =>
+                setFormData({ ...formData, courier: boolean })
+              }
+              isCompleted={(completed: boolean) =>
+                updateStepStatus('shipmentDetails', completed)
+              }
+              isActive={(active: boolean) =>
+                switchStep(active ? 'contactDetails' : 'shipmentDetails')
+              }
+              address={formData.selectedAddress}
+              shipment={formData.selectedShipment.label}
             />
-            <ButtonWithoutLink
-              color="primary mt-4 mb-4"
-              type="submit"
-              onClick={() => {
-                handleShipmentFormStatus('contactDetails');
-              }}
-            >
-              Continue
-            </ButtonWithoutLink>
           </div>
 
           <div className="border-b-2 my-2" />
           <ProccessHeadings
-            status={contactDetails}
+            status={{
+              active: parcelDetails.contactDetails,
+              completed: parcelDetails.contactDetailsCompleted,
+            }}
             heading="Contact details"
-            handleClick={() => handleShipmentFormStatus('contactDetails')}
+            handleClick={() => switchStep('contactDetails')}
             number="2"
           />
-          <div className={contactDetails ? '' : 'hidden'}>
-            <ContactDetails />
-            <ButtonWithoutLink
-              color="primary mt-4"
-              onClick={() => handleShipmentFormStatus('paymentDetails')}
-            >
-              Continue
-            </ButtonWithoutLink>
+          <div className={parcelDetails.contactDetails ? '' : 'hidden'}>
+            <ContactDetails
+              isCompleted={(completed: boolean) =>
+                updateStepStatus('contactDetails', completed)
+              }
+              isActive={(active: boolean) =>
+                switchStep(active ? 'paymentDetails' : 'contactDetails')
+              }
+            />
           </div>
 
           <div className="border-b-2 my-2" />
           <ProccessHeadings
-            status={paymentDetails}
+            status={{
+              active: parcelDetails.paymentDetails,
+              completed: parcelDetails.paymentDetailsCompleted,
+            }}
             heading="Overview and payment"
-            handleClick={() => handleShipmentFormStatus('paymentDetails')}
+            handleClick={() => {}}
             number="3"
           />
-          <div className={paymentDetails ? '' : 'hidden'}>
-            <PaymentDetails />
+          <div className={parcelDetails.paymentDetails ? '' : 'hidden'}>
+            <PaymentDetails
+              isActive={(active: boolean) =>
+                switchStep(active ? 'paymentDetails' : 'paymentDetails')
+              }
+            />
             <ButtonWithoutLink color="primary mt-4" type="submit">
               Pay
             </ButtonWithoutLink>
@@ -125,7 +144,7 @@ export default function Parcel() {
                 Price:
                 <input
                   className="hidden"
-                  name="totalPrice"
+                  name="price"
                   value={totalPrice}
                   readOnly
                 />
@@ -133,9 +152,12 @@ export default function Parcel() {
               </span>
             </div>
           </div>
-          {mapActive && (
+          {formData.mapActive && (
             <>
-              <GoogleMap onSelect={handleAddress} country={selectedCountry} />
+              <GoogleMap
+                onSelect={handleAddress}
+                country={formData.selectedCountry}
+              />
             </>
           )}
         </div>
