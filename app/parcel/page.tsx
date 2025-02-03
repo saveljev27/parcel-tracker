@@ -1,9 +1,9 @@
 'use client';
 
-import { GoogleMap } from '@/components';
+import { BalticMap, InternationalMap } from '@/components';
 
 import { ButtonWithoutLink } from '@/components/UI';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { createShipment } from '../actions';
 import { totalPrice } from '@/lib/totalPrice';
 import {
@@ -18,8 +18,10 @@ export default function Parcel() {
     selectedAddress: '',
     selectedCountry: 'LV',
     selectedShipment: { label: '', price: 0 },
-    mapActive: false,
+    balticMapActive: false,
+    intMapActive: false,
     courier: false,
+    location: { lat: 53.422421686025785, lng: 18.82890513134709 },
   });
   const [parcelDetails, setParcelDetails] = useState({
     shipmentDetails: true,
@@ -30,26 +32,46 @@ export default function Parcel() {
     paymentDetailsCompleted: false,
   });
 
+  const {
+    shipmentDetails,
+    contactDetails,
+    paymentDetails,
+    shipmentDetailsCompleted,
+    contactDetailsCompleted,
+    paymentDetailsCompleted,
+  } = parcelDetails;
+
   const handleSend = (FormData: FormData) => {
     createShipment(FormData);
   };
   const handleAddress = (address: string) => {
     setFormData({ ...formData, selectedAddress: address });
   };
-  const updateStepStatus = (step: string, completed: boolean) => {
+  const updateStepStatus = useCallback((step: string, completed: boolean) => {
     setParcelDetails((prevState) => ({
       ...prevState,
       [`${step}Completed`]: completed,
     }));
-  };
-  const switchStep = (currentStep: string) => {
+  }, []);
+
+  const switchStep = useCallback((currentStep: string) => {
     setParcelDetails((prevState) => ({
       ...prevState,
       shipmentDetails: currentStep === 'shipmentDetails',
       contactDetails: currentStep === 'contactDetails',
       paymentDetails: currentStep === 'paymentDetails',
     }));
-  };
+  }, []);
+
+  const switchMap = useCallback((currentMap: string) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      balticMapActive: currentMap === 'balticMapActive',
+      intMapActive: currentMap === 'intMapActive',
+    }));
+  }, []);
+
+  console.log(totalPrice(formData));
 
   return (
     <form action={handleSend}>
@@ -59,14 +81,14 @@ export default function Parcel() {
 
           <ProccessHeadings
             status={{
-              active: parcelDetails.shipmentDetails,
-              completed: parcelDetails.shipmentDetailsCompleted,
+              active: shipmentDetails,
+              completed: shipmentDetailsCompleted,
             }}
             handleClick={() => switchStep('shipmentDetails')}
             heading="Shipment details"
             number="1"
           />
-          <div className={parcelDetails.shipmentDetails ? '' : 'hidden'}>
+          <div className={shipmentDetails ? '' : 'hidden'}>
             <ShipmentDetails
               selectedCountry={(country: string) =>
                 setFormData({ ...formData, selectedCountry: country })
@@ -77,8 +99,14 @@ export default function Parcel() {
               selectedShipment={(shipment: { label: string; price: number }) =>
                 setFormData({ ...formData, selectedShipment: shipment })
               }
-              mapActive={(boolean: boolean) =>
-                setFormData({ ...formData, mapActive: boolean })
+              balticMapActive={(boolean: boolean) =>
+                switchMap(boolean ? 'balticMapActive' : 'intMapActive')
+              }
+              intMapActive={(boolean: boolean) =>
+                switchMap(boolean ? 'intMapActive' : 'balticMapActive')
+              }
+              location={(loc: { lat: number; lng: number }) =>
+                setFormData({ ...formData, location: loc })
               }
               isCourier={(boolean: boolean) =>
                 setFormData({ ...formData, courier: boolean })
@@ -87,7 +115,7 @@ export default function Parcel() {
                 updateStepStatus('shipmentDetails', completed)
               }
               isActive={(active: boolean) =>
-                switchStep(active ? 'contactDetails' : 'shipmentDetails')
+                switchStep(active ? 'shipmentDetails' : 'contactDetails')
               }
               address={formData.selectedAddress}
               shipment={formData.selectedShipment.label}
@@ -97,20 +125,20 @@ export default function Parcel() {
           <div className="border-b-2 my-2" />
           <ProccessHeadings
             status={{
-              active: parcelDetails.contactDetails,
-              completed: parcelDetails.contactDetailsCompleted,
+              active: contactDetails,
+              completed: contactDetailsCompleted,
             }}
             heading="Contact details"
             handleClick={() => switchStep('contactDetails')}
             number="2"
           />
-          <div className={parcelDetails.contactDetails ? '' : 'hidden'}>
+          <div className={contactDetails ? '' : 'hidden'}>
             <ContactDetails
               isCompleted={(completed: boolean) =>
                 updateStepStatus('contactDetails', completed)
               }
               isActive={(active: boolean) =>
-                switchStep(active ? 'paymentDetails' : 'contactDetails')
+                switchStep(active ? 'contactDetails' : 'paymentDetails')
               }
             />
           </div>
@@ -118,14 +146,14 @@ export default function Parcel() {
           <div className="border-b-2 my-2" />
           <ProccessHeadings
             status={{
-              active: parcelDetails.paymentDetails,
-              completed: parcelDetails.paymentDetailsCompleted,
+              active: paymentDetails,
+              completed: paymentDetailsCompleted,
             }}
             heading="Overview and payment"
             handleClick={() => {}}
             number="3"
           />
-          <div className={parcelDetails.paymentDetails ? '' : 'hidden'}>
+          <div className={paymentDetails ? '' : 'hidden'}>
             <PaymentDetails
               isActive={(active: boolean) =>
                 switchStep(active ? 'paymentDetails' : 'paymentDetails')
@@ -137,28 +165,31 @@ export default function Parcel() {
           </div>
         </div>
 
-        <div className="grow">
-          <div className="bg-primary rounded-t-lg p-4">
-            <div className="flex justify-between">
-              <span className="text-3xl">
-                Price:
-                <input
-                  className="hidden"
-                  name="price"
-                  value={totalPrice(formData)}
-                  readOnly
-                />
-                <span className="capitalize ml-1">{totalPrice(formData)}€</span>
-              </span>
-            </div>
-          </div>
-          {formData.mapActive && (
-            <>
-              <GoogleMap
-                onSelect={handleAddress}
-                country={formData.selectedCountry}
+        <div className="grow bg-primary rounded-lg py-6">
+          <div className="flex justify-between">
+            <span className="text-3xl mb-4 px-6">
+              Price:
+              <input
+                className="hidden"
+                name="totalPrice"
+                value={totalPrice(formData)}
+                readOnly
               />
-            </>
+              <span className="capitalize ml-1">{totalPrice(formData)}€</span>
+            </span>
+          </div>
+
+          {formData.balticMapActive && (
+            <BalticMap
+              onSelect={handleAddress}
+              country={formData.selectedCountry}
+            />
+          )}
+          {formData.intMapActive && (
+            <InternationalMap
+              location={formData.location}
+              onSelect={handleAddress}
+            />
           )}
         </div>
       </div>

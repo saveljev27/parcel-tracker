@@ -1,6 +1,7 @@
 'use server';
 
 import { PrismaClient, Shipment } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 const prisma = new PrismaClient();
 
@@ -24,18 +25,21 @@ export async function createShipment(formData: FormData): Promise<Shipment> {
     totalPrice: parseFloat(data.totalPrice as string) || 0,
   };
 
+  let shipmentId;
+
   try {
     // Создаем запись в базе данных
-    await prisma.shipment.create({
+    const shipment = await prisma.shipment.create({
       data: shipmentData,
     });
+    shipmentId = shipment.id;
     console.log('Shipment successfully created');
   } catch (error) {
     console.error('Error creating shipment:', error);
     throw new Error('Failed to create shipment');
   }
-
-  redirect('/');
+  revalidatePath('/success/' + shipmentId);
+  redirect('/success/' + shipmentId);
 }
 
 export async function findAllShipments() {
@@ -44,5 +48,14 @@ export async function findAllShipments() {
     return shipments;
   } catch {
     console.error('Error fetching shipments');
+  }
+}
+
+export async function findShipmentById(id: string) {
+  try {
+    const shipment = await prisma.shipment.findUnique({ where: { id } });
+    return shipment;
+  } catch {
+    console.error('Error fetching shipment by id');
   }
 }

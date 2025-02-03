@@ -18,9 +18,11 @@ export function ContactDetails({ isCompleted, isActive }: ContactDetailsProps) {
     const validationMessage = validation(value, contactDetails);
     if (validationMessage) {
       setErrors(validationMessage);
+      isCompleted(false);
+      isActive(true);
     }
     isCompleted(true);
-    isActive(true);
+    isActive(false);
   };
 
   const { senderName, senderEmail, senderPhone, receiverName, receiverPhone } =

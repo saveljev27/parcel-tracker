@@ -12,7 +12,9 @@ export function ShipmentDetails({
   selectedCountry,
   selectedAddress,
   selectedShipment,
-  mapActive,
+  location,
+  balticMapActive,
+  intMapActive,
   isCourier,
   isCompleted,
   isActive,
@@ -42,7 +44,7 @@ export function ShipmentDetails({
     value: string;
     name: string;
   }) => {
-    mapActive(false);
+    balticMapActive(false);
     name === 'delivery' &&
       setDeliveryDetails({ ...deliveryDetails, delivery: value });
     name === 'carrier' &&
@@ -55,10 +57,12 @@ export function ShipmentDetails({
 
     if (validationMessage) {
       setError(validationMessage);
+      isCompleted(false);
+      isActive(true);
       return;
     }
     isCompleted(true);
-    isActive(true);
+    isActive(false);
   };
 
   const handleShimpent = ({
@@ -72,12 +76,9 @@ export function ShipmentDetails({
     setDeliveryDetails({ ...deliveryDetails, shipment: label });
   };
 
-  const handleMapOpen = () => {
-    if (
-      delivery === 'baltics' &&
-      (carrier === 'postoffice' || carrier === 'courier')
-    )
-      mapActive(true);
+  const handleMapOpen = (value: string) => {
+    value === 'baltics' && balticMapActive(true);
+    value === 'int' && intMapActive(true);
   };
 
   return (
@@ -96,33 +97,65 @@ export function ShipmentDetails({
         onSelect={handleDeliveryOrCarrier}
       />
       <div className="mt-5 max-w-[450px] ">
-        {carrier === 'courier' && (
+        {delivery === 'international' && carrier === 'courier' && (
           <>
             <h1 className="text-lg mt-3 mb-3">
               Where can the courier pick up your shipment?
             </h1>
-            <AddressInput
-              inputname="pickupAddress"
-              placeholder="Enter your pickup address"
-              setPlace={(place) =>
-                setDeliveryDetails({ ...deliveryDetails, pickupAddress: place })
-              }
-            />
+            <div onClick={() => handleMapOpen('int')}>
+              <AddressInput
+                inputname="pickupAddress"
+                placeholder="Enter your pickup address"
+                setPlace={(place) => {
+                  setDeliveryDetails({
+                    ...deliveryDetails,
+                    pickupAddress: place.address,
+                  });
+                  location(place.loc);
+                }}
+              />
+            </div>
+          </>
+        )}
+        {delivery === 'baltics' && carrier === 'courier' && (
+          <>
+            <h1 className="text-lg mt-3 mb-3">
+              Where can the courier pick up your shipment?
+            </h1>
+            <div onClick={() => handleMapOpen('int')}>
+              <AddressInput
+                inputname="pickupAddress"
+                placeholder="Enter your pickup address"
+                setPlace={(place) => {
+                  setDeliveryDetails({
+                    ...deliveryDetails,
+                    pickupAddress: place.address,
+                  });
+                  location(place.loc);
+                }}
+              />
+            </div>
           </>
         )}
         <div>
           <h1 className="text-lg mt-3 mb-3">
             Where are you sending your parcel?
           </h1>
-          <div>
+          <>
             {delivery === 'international' && (
-              <AddressInput
-                inputname="sendAddress"
-                placeholder="Enter your shipment address"
-                setPlace={(place) =>
-                  setDeliveryDetails({ ...deliveryDetails, sendAddress: place })
-                }
-              />
+              <div onClick={() => handleMapOpen('int')}>
+                <AddressInput
+                  inputname="sendAddress"
+                  placeholder="Enter your shipment address"
+                  setPlace={(place) => {
+                    setDeliveryDetails({
+                      ...deliveryDetails,
+                      sendAddress: place.address,
+                    });
+                    location(place.loc);
+                  }}
+                />
+              </div>
             )}
             {delivery === 'baltics' && (
               <div className="flex gap-2">
@@ -157,7 +190,7 @@ export function ShipmentDetails({
                   type="text"
                   name="sendAddress"
                   value={address || ''}
-                  onClick={handleMapOpen}
+                  onClick={() => handleMapOpen('baltics')}
                   autoComplete="off"
                   onChange={(e) =>
                     selectedAddress && selectedAddress(e.target.value)
@@ -167,7 +200,7 @@ export function ShipmentDetails({
                 />
               </div>
             )}
-          </div>
+          </>
         </div>
         {sendAddress && (
           <div>

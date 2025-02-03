@@ -18,7 +18,13 @@ export function AddressInput({
   ) => {
     if (!place) return;
     setSelectedPlace(place);
-    setPlace(place.formatted_address || '');
+    setPlace({
+      address: place.formatted_address || '',
+      loc: {
+        lat: place.geometry?.location?.lat() || 0,
+        lng: place.geometry?.location?.lng() || 0,
+      },
+    });
   };
 
   return (

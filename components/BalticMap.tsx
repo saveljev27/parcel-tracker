@@ -18,7 +18,7 @@ const Z_INDEX_HOVER = locations.length + 1;
 
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string;
 
-export const GoogleMap = ({
+export const BalticMap = ({
   onSelect,
   country,
 }: {
@@ -108,6 +108,7 @@ export const GoogleMap = ({
         style={{
           boxShadow:
             '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+          maxHeight: '50vh',
         }}
         disableDefaultUI
       >

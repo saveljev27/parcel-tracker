@@ -12,7 +12,9 @@ export interface ShipmentDetailsProps {
   selectedCountry: (country: string) => void;
   selectedAddress?: (address: string) => void;
   selectedShipment: (shipment: { label: string; price: number }) => void;
-  mapActive: (boolean: boolean) => void;
+  location: (loc: { lat: number; lng: number }) => void;
+  balticMapActive: (boolean: boolean) => void;
+  intMapActive: (boolean: boolean) => void;
   isCourier: (boolean: boolean) => void;
   isCompleted: (boolean: boolean) => void;
   isActive: (boolean: boolean) => void;
@@ -42,7 +44,10 @@ export interface InputProps {
 export interface AddressInputProps {
   inputname: string;
   placeholder: string;
-  setPlace: (place: string) => void;
+  setPlace: (address: {
+    address: string;
+    loc: { lat: number; lng: number };
+  }) => void;
 }
 
 export interface ShipmentSizeProps {
