@@ -1,33 +1,26 @@
 'use server';
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Shipment } from '@prisma/client';
+import { redirect } from 'next/navigation';
+const prisma = new PrismaClient();
 
-export async function createShipment(formData: FormData) {
-  const prisma = new PrismaClient();
-
-  // Преобразуем FormData в обычный объект
+export async function createShipment(formData: FormData): Promise<Shipment> {
   const data = Object.fromEntries(formData);
-  console.log(data); // Логируем данные для проверки
 
-  // Обрабатываем данные и приводим к нужным типам
-  const shipmentData: any = {
-    cardHolder: data.cardHolder,
-    cardNumber: data.cardNumber,
-    carrier: data.carrier,
-    delivery: data.delivery,
-    pickupAddress: data.pickupAddress
-      ? (data.pickupAddress as string)
-      : undefined,
-    balticCountry: data.balticCountry
-      ? (data.balticCountry as string)
-      : undefined,
-    receiverName: data.receiverName,
-    receiverPhone: data.receiverPhone,
-    sendAddress: data.sendAddress,
-    senderEmail: data.senderEmail,
-    senderName: data.senderName,
-    senderPhone: data.senderPhone,
-    shipmentSize: data.shipmentSize,
+  const shipmentData: Omit<Shipment, 'id' | 'createdAt' | 'updatedAt'> = {
+    cardHolder: data.cardHolder as string,
+    cardNumber: data.cardNumber as string,
+    carrier: data.carrier as string,
+    delivery: data.delivery as string,
+    pickupAddress: data.pickupAddress ? (data.pickupAddress as string) : null,
+    balticCountry: data.balticCountry ? (data.balticCountry as string) : null,
+    receiverName: data.receiverName as string,
+    receiverPhone: data.receiverPhone as string,
+    sendAddress: data.sendAddress as string,
+    senderEmail: data.senderEmail as string,
+    senderName: data.senderName as string,
+    senderPhone: data.senderPhone as string,
+    shipmentSize: data.shipmentSize as string,
     totalPrice: parseFloat(data.totalPrice as string) || 0,
   };
 
@@ -40,5 +33,16 @@ export async function createShipment(formData: FormData) {
   } catch (error) {
     console.error('Error creating shipment:', error);
     throw new Error('Failed to create shipment');
+  }
+
+  redirect('/');
+}
+
+export async function findAllShipments() {
+  try {
+    const shipments = await prisma.shipment.findMany();
+    return shipments;
+  } catch {
+    console.error('Error fetching shipments');
   }
 }

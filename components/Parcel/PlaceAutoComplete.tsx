@@ -1,12 +1,6 @@
+import { PlaceAutocompleteProps } from '@/types';
 import { useMapsLibrary } from '@vis.gl/react-google-maps';
 import { useEffect, useRef, useState } from 'react';
-
-interface PlaceAutocompleteProps {
-  onPlaceSelect: (place: google.maps.places.PlaceResult | null) => void;
-  selectedPlace: string | 'Invalid address';
-  inputname: string;
-  placeholder: string;
-}
 
 export function PlaceAutoComplete({
   onPlaceSelect,

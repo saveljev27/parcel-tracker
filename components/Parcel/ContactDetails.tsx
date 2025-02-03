@@ -1,16 +1,10 @@
 import React, { useState } from 'react';
 import { ButtonWithoutLink } from '../UI';
 import { validation } from '@/lib/validation';
+import { ContactDetailsProps } from '@/types';
+import { Input } from '../UI/Input';
 
-interface ShipmentDetailsProps {
-  isCompleted: (boolean: boolean) => void;
-  isActive: (boolean: boolean) => void;
-}
-
-export function ContactDetails({
-  isCompleted,
-  isActive,
-}: ShipmentDetailsProps) {
+export function ContactDetails({ isCompleted, isActive }: ContactDetailsProps) {
   const [contactDetails, setContactDetails] = useState({
     senderName: '',
     senderEmail: '',
@@ -29,87 +23,58 @@ export function ContactDetails({
     isActive(true);
   };
 
+  const { senderName, senderEmail, senderPhone, receiverName, receiverPhone } =
+    contactDetails;
+
   return (
     <section className="px-4">
       <h1 className="text-lg mt-4 mb-3">Sender</h1>
       <div className="flex flex-col gap-4">
-        <input
+        <Input
           placeholder="Name and Surname"
           name="senderName"
-          className={`${
-            contactDetails.senderName.length ? 'border-primary' : ''
-          }`}
-          type="text"
-          value={contactDetails.senderName || ''}
-          onChange={(e) =>
-            setContactDetails({ ...contactDetails, senderName: e.target.value })
+          value={senderName || ''}
+          handleChange={(value: string) =>
+            setContactDetails({ ...contactDetails, senderName: value })
           }
           required
         />
-        <input
+        <Input
           placeholder="Email"
           name="senderEmail"
-          className={`${
-            contactDetails.senderEmail.length ? 'border-primary' : ''
-          }`}
-          type="text"
-          value={contactDetails.senderEmail || ''}
-          onChange={(e) =>
-            setContactDetails({
-              ...contactDetails,
-              senderEmail: e.target.value,
-            })
+          value={senderEmail || ''}
+          handleChange={(value) =>
+            setContactDetails({ ...contactDetails, senderEmail: value })
           }
           required
         />
-        <input
+        <Input
           placeholder="Phone number"
           name="senderPhone"
-          className={`${
-            contactDetails.senderPhone.length ? 'border-primary' : ''
-          }`}
-          type="text"
-          value={contactDetails.senderPhone || ''}
-          onChange={(e) =>
-            setContactDetails({
-              ...contactDetails,
-              senderPhone: e.target.value,
-            })
+          value={senderPhone || ''}
+          handleChange={(value) =>
+            setContactDetails({ ...contactDetails, senderPhone: value })
           }
           required
         />
       </div>
       <h1 className="text-lg mt-4 mb-3">Receiver</h1>
       <div className="flex flex-col gap-4">
-        <input
+        <Input
           placeholder="Name and Surname"
           name="receiverName"
-          className={`${
-            contactDetails.receiverName.length ? 'border-primary' : ''
-          }`}
-          type="text"
-          value={contactDetails.receiverName || ''}
-          onChange={(e) =>
-            setContactDetails({
-              ...contactDetails,
-              receiverName: e.target.value,
-            })
+          value={receiverName || ''}
+          handleChange={(value) =>
+            setContactDetails({ ...contactDetails, receiverName: value })
           }
           required
         />
-        <input
+        <Input
           placeholder="Phone number"
           name="receiverPhone"
-          className={`${
-            contactDetails.receiverPhone.length ? 'border-primary' : ''
-          }`}
-          type="text"
-          value={contactDetails.receiverPhone || ''}
-          onChange={(e) =>
-            setContactDetails({
-              ...contactDetails,
-              receiverPhone: e.target.value,
-            })
+          value={receiverPhone || ''}
+          handleChange={(value) =>
+            setContactDetails({ ...contactDetails, receiverPhone: value })
           }
           required
         />

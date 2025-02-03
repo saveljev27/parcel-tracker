@@ -5,20 +5,8 @@ import { carrierOptions, deliveryOptions } from '@/constants/radio';
 import { ButtonWithoutLink, Radio } from '../UI';
 import { ShipmentSize } from './ShipmentSize';
 import { AddressInput } from './AddressInput';
-import { error } from 'console';
 import { validation } from '@/lib/validation';
-
-interface ShipmentDetailsProps {
-  selectedCountry: (country: string) => void;
-  selectedAddress?: (address: string) => void;
-  selectedShipment: (shipment: { label: string; price: number }) => void;
-  mapActive: (boolean: boolean) => void;
-  isCourier: (boolean: boolean) => void;
-  isCompleted: (boolean: boolean) => void;
-  isActive: (boolean: boolean) => void;
-  address: string;
-  shipment: string;
-}
+import { ShipmentDetailsProps } from '@/types';
 
 export function ShipmentDetails({
   selectedCountry,
@@ -39,6 +27,8 @@ export function ShipmentDetails({
     sendAddress: '',
     shipment: '',
   });
+  const { delivery, carrier, pickupAddress, balticCountry, sendAddress } =
+    deliveryDetails;
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -84,9 +74,8 @@ export function ShipmentDetails({
 
   const handleMapOpen = () => {
     if (
-      deliveryDetails.delivery === 'baltics' &&
-      (deliveryDetails.carrier === 'postoffice' ||
-        deliveryDetails.carrier === 'courier')
+      delivery === 'baltics' &&
+      (carrier === 'postoffice' || carrier === 'courier')
     )
       mapActive(true);
   };
@@ -96,18 +85,18 @@ export function ShipmentDetails({
       <div className="mt-5 mb-5">
         <Radio
           options={deliveryOptions}
-          selectedOption={deliveryDetails.delivery}
+          selectedOption={delivery}
           onSelect={handleDeliveryOrCarrier}
         />
       </div>
       <h1 className="text-lg mt-3 mb-3">How will you send your parcel?</h1>
       <Radio
         options={carrierOptions}
-        selectedOption={deliveryDetails.carrier}
+        selectedOption={carrier}
         onSelect={handleDeliveryOrCarrier}
       />
       <div className="mt-5 max-w-[450px] ">
-        {deliveryDetails.carrier === 'courier' && (
+        {carrier === 'courier' && (
           <>
             <h1 className="text-lg mt-3 mb-3">
               Where can the courier pick up your shipment?
@@ -126,7 +115,7 @@ export function ShipmentDetails({
             Where are you sending your parcel?
           </h1>
           <div>
-            {deliveryDetails.delivery === 'international' && (
+            {delivery === 'international' && (
               <AddressInput
                 inputname="sendAddress"
                 placeholder="Enter your shipment address"
@@ -135,7 +124,7 @@ export function ShipmentDetails({
                 }
               />
             )}
-            {deliveryDetails.delivery === 'baltics' && (
+            {delivery === 'baltics' && (
               <div className="flex gap-2">
                 <div className="flex flex-col justify-center border max-w-[30%] p-1 rounded-lg shadow-lg transition cursor-pointer ">
                   <label
@@ -180,7 +169,7 @@ export function ShipmentDetails({
             )}
           </div>
         </div>
-        {address && (
+        {sendAddress && (
           <div>
             <h1 className="text-lg mt-4 mb-3">What size is your shipment?</h1>
             <ShipmentSize

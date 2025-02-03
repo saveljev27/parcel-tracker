@@ -1,14 +1,6 @@
-import { RadioOption } from '@/constants/radio';
+import { RadioProps } from '@/types';
 
-export function Radio({
-  options,
-  selectedOption,
-  onSelect,
-}: {
-  options: RadioOption[];
-  selectedOption: string | undefined;
-  onSelect: (params: { value: string; name: string }) => void;
-}) {
+export function Radio({ options, selectedOption, onSelect }: RadioProps) {
   return (
     <div className="flex flex-col gap-4 max-w-[450px]">
       {options.map(({ label, value, info, name }) => (

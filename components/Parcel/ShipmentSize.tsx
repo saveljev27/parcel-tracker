@@ -1,12 +1,10 @@
 import { shipmentsSizes } from '@/constants/shipmentsizes';
+import { ShipmentSizeProps } from '@/types';
 
 export function ShipmentSize({
   selectedShipment,
   onSelect,
-}: {
-  selectedShipment: string;
-  onSelect: (params: { label: string; price: number }) => void;
-}) {
+}: ShipmentSizeProps) {
   return (
     <div className="grid grid-cols-2 grid-rows-2 gap-2">
       {shipmentsSizes.map(({ size, price, label }) => (

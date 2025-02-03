@@ -1,13 +1,6 @@
-import React from 'react';
+import { ProccessHeadingsProps } from '@/types';
 
-interface ProccessHeadingsProps {
-  status: { active: boolean; completed: boolean };
-  heading: string;
-  number: string;
-  handleClick: () => void;
-}
-
-export default function ProccessHeadings({
+export function ProccessHeadings({
   status,
   heading,
   number,
@@ -17,7 +10,7 @@ export default function ProccessHeadings({
     status.active
       ? 'bg-secondary text-white'
       : 'bg-none text-gray-600 border-gray-600'
-  } ${status.completed ? 'bg-green-700 text-white' : ''}`;
+  } ${status.completed ? 'bg-green-700 text-white border-gray-500' : ''}`;
 
   return (
     <div className="flex mt-4 px-4 justify-between">

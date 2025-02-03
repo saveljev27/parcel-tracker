@@ -1,13 +1,17 @@
 'use client';
 
 import { GoogleMap } from '@/components';
-import { ContactDetails } from '@/components/Parcel/ContactDetails';
-import PaymentDetails from '@/components/Parcel/PaymentDetails';
-import ProccessHeadings from '@/components/Parcel/ProccessHeadings';
-import { ShipmentDetails } from '@/components/Parcel/ShipmentDetails';
+
 import { ButtonWithoutLink } from '@/components/UI';
 import { useState } from 'react';
 import { createShipment } from '../actions';
+import { totalPrice } from '@/lib/totalPrice';
+import {
+  ContactDetails,
+  PaymentDetails,
+  ProccessHeadings,
+  ShipmentDetails,
+} from '@/components/Parcel';
 
 export default function Parcel() {
   const [formData, setFormData] = useState({
@@ -26,11 +30,11 @@ export default function Parcel() {
     paymentDetailsCompleted: false,
   });
 
-  const handleAddress = (address: string) => {
-    setFormData({ ...formData, selectedAddress: address });
-  };
   const handleSend = (FormData: FormData) => {
     createShipment(FormData);
+  };
+  const handleAddress = (address: string) => {
+    setFormData({ ...formData, selectedAddress: address });
   };
   const updateStepStatus = (step: string, completed: boolean) => {
     setParcelDetails((prevState) => ({
@@ -46,10 +50,6 @@ export default function Parcel() {
       paymentDetails: currentStep === 'paymentDetails',
     }));
   };
-
-  const totalPrice = formData.courier
-    ? formData.selectedShipment.price + 10
-    : formData.selectedShipment.price;
 
   return (
     <form action={handleSend}>
@@ -145,10 +145,10 @@ export default function Parcel() {
                 <input
                   className="hidden"
                   name="price"
-                  value={totalPrice}
+                  value={totalPrice(formData)}
                   readOnly
                 />
-                <span className="capitalize ml-1">{totalPrice}€</span>
+                <span className="capitalize ml-1">{totalPrice(formData)}€</span>
               </span>
             </div>
           </div>

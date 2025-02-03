@@ -1,13 +1,5 @@
+import { ButtonProps } from '@/types';
 import Link from 'next/link';
-
-interface ButtonProps {
-  children: React.ReactNode;
-  color: string;
-  link?: string;
-  classList?: string;
-  type?: 'button' | 'submit' | 'reset' | undefined;
-  onClick?: () => void;
-}
 
 export function Button({ children, color, link, classList }: ButtonProps) {
   return (
@@ -29,7 +21,7 @@ export function ButtonWithoutLink({
 }: ButtonProps) {
   return (
     <button
-      className={`bg-${color} px-4 py-2 mx-4 rounded-xl hover:bg-opacity-60 transition shadow-lg`}
+      className={`bg-${color} px-4 py-2 rounded-xl hover:bg-opacity-60 transition shadow-lg`}
       onClick={onClick}
       type={type ? type : 'button'}
     >

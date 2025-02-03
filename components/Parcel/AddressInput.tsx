@@ -1,12 +1,7 @@
 import { useState } from 'react';
 import { APIProvider } from '@vis.gl/react-google-maps';
 import { PlaceAutoComplete } from './PlaceAutoComplete';
-
-interface AddressInputProps {
-  inputname: string;
-  placeholder: string;
-  setPlace: (place: string) => void;
-}
+import { AddressInputProps } from '@/types';
 
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string;
 
