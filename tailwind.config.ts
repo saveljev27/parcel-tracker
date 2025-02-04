@@ -13,6 +13,8 @@ export default {
         foreground: 'var(--foreground)',
         primary: '#FFBC01',
         secondary: '#F86300',
+        lightyellow: '#FFF7E7',
+        lightpink: '#FAEAFD',
       },
     },
   },

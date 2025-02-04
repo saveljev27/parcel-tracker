@@ -71,8 +71,6 @@ export default function Parcel() {
     }));
   }, []);
 
-  console.log(totalPrice(formData));
-
   return (
     <form action={handleSend}>
       <div className="flex gap-5 min-h-[60vh]">
@@ -165,7 +163,7 @@ export default function Parcel() {
           </div>
         </div>
 
-        <div className="grow bg-primary rounded-lg py-6">
+        <div className="grow bg-lightyellow rounded-lg py-6 px-2 shadow-md border">
           <div className="flex justify-between">
             <span className="text-3xl mb-4 px-6">
               Price:
@@ -178,7 +176,7 @@ export default function Parcel() {
               <span className="capitalize ml-1">{totalPrice(formData)}€</span>
             </span>
           </div>
-
+          <div className="border-b-2" />
           {formData.balticMapActive && (
             <BalticMap
               onSelect={handleAddress}

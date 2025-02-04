@@ -4,7 +4,6 @@ export function Footer() {
   return (
     <footer>
       <div className="flex justify-between mt-8">
-        <Image src="/img/logo.png" alt="logo" width={80} height={80} />
         <div>
           <ul className="flex gap-3">
             <li className="text-hover">Instagram</li>
