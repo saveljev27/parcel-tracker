@@ -7,10 +7,11 @@ const prisma = new PrismaClient();
 
 export async function createShipment(formData: FormData): Promise<Shipment> {
   const data = Object.fromEntries(formData);
+  const userExist = await prisma.user.findUnique({
+    where: { email: data.senderEmail as string },
+  });
 
   const shipmentData: Omit<Shipment, 'id' | 'createdAt' | 'updatedAt'> = {
-    cardHolder: data.cardHolder as string,
-    cardNumber: data.cardNumber as string,
     carrier: data.carrier as string,
     delivery: data.delivery as string,
     pickupAddress: data.pickupAddress ? (data.pickupAddress as string) : null,
@@ -23,17 +24,29 @@ export async function createShipment(formData: FormData): Promise<Shipment> {
     senderPhone: data.senderPhone as string,
     shipmentSize: data.shipmentSize as string,
     totalPrice: parseFloat(data.totalPrice as string) || 0,
+    payStatus: true as boolean,
+    userId: userExist ? (userExist.id as string) : null,
   };
 
   let shipmentId;
 
   try {
-    // Создаем запись в базе данных
     const shipment = await prisma.shipment.create({
       data: shipmentData,
     });
     shipmentId = shipment.id;
-    console.log('Shipment successfully created');
+
+    if (userExist) {
+      await prisma.user.update({
+        where: { id: userExist.id },
+        data: {
+          shipmentsIds: {
+            push: shipmentId as string,
+          },
+        },
+      });
+      console.log('user updated');
+    }
   } catch (error) {
     console.error('Error creating shipment:', error);
     throw new Error('Failed to create shipment');
