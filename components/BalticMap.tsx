@@ -164,7 +164,7 @@ export const BalticMap = ({
             onCloseClick={handleInfowindowCloseClick}
           >
             <p className="font-semibold text-lg">{selectedCity} Post Office</p>
-            <h2>Address: {selectedAddress}</h2>
+            <p className="text-sm">Address: {selectedAddress}</p>
           </InfoWindow>
         )}
       </Map>

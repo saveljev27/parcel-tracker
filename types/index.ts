@@ -1,5 +1,4 @@
 import { RadioOption } from '@/constants/radio';
-import { RefObject } from 'react';
 
 export interface ProccessHeadingsProps {
   status: { active: boolean; completed: boolean };

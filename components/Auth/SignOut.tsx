@@ -1,7 +1,7 @@
 import { signOut } from '@/auth';
 import { DoorClosed } from 'lucide-react';
 
-export default function SignOut() {
+export function SignOut() {
   return (
     <form
       action={async () => {

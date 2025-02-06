@@ -75,7 +75,7 @@ export default function Parcel() {
     <form action={handleSend}>
       <div className="flex gap-5 min-h-[60vh]">
         <div className="max-w-[550px] w-[500px]">
-          <h1 className="text-4xl font-bold">Register shipment</h1>
+          <h1>Register shipment</h1>
 
           <ProccessHeadings
             status={{

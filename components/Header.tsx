@@ -1,9 +1,10 @@
+'use server';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { UserRound } from 'lucide-react';
 import { auth } from '@/auth';
-import SignIn from './Auth/SignIn';
-import SignOut from './Auth/SignOut';
+import { SignInButton, SignOut } from './Auth';
 
 export async function Header() {
   const session = await auth();
@@ -14,16 +15,15 @@ export async function Header() {
         <div>English</div>
 
         {!session ? (
-          <SignIn />
+          <SignInButton />
         ) : (
           <div className="flex gap-3">
-            <button
-              type="submit"
-              className="bg-primary py-2 px-4 rounded-xl text-hover text-sm flex gap-2"
-            >
-              <UserRound size={20} />
-              <span>My Profile</span>
-            </button>
+            <Link href="/profile">
+              <button className="bg-primary py-2 px-4 rounded-xl text-hover text-sm flex gap-2">
+                <UserRound size={20} />
+                <span>My Profile</span>
+              </button>
+            </Link>
             <SignOut />
           </div>
         )}

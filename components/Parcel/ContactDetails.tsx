@@ -30,7 +30,7 @@ export function ContactDetails({ isCompleted, isActive }: ContactDetailsProps) {
 
   return (
     <section className="px-4">
-      <h1 className="text-lg mt-4 mb-3">Sender</h1>
+      <h5 className="mt-4 mb-3">Sender</h5>
       <div className="flex flex-col gap-4">
         <Input
           placeholder="Name and Surname"
@@ -60,7 +60,7 @@ export function ContactDetails({ isCompleted, isActive }: ContactDetailsProps) {
           required
         />
       </div>
-      <h1 className="text-lg mt-4 mb-3">Receiver</h1>
+      <h5 className="mt-4 mb-3">Receiver</h5>
       <div className="flex flex-col gap-4">
         <Input
           placeholder="Name and Surname"

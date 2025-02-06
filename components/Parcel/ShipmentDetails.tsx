@@ -90,7 +90,7 @@ export function ShipmentDetails({
           onSelect={handleDeliveryOrCarrier}
         />
       </div>
-      <h1 className="text-lg mt-3 mb-3">How will you send your parcel?</h1>
+      <h5 className="mt-3 mb-3">How will you send your parcel?</h5>
       <Radio
         options={carrierOptions}
         selectedOption={carrier}
@@ -99,9 +99,9 @@ export function ShipmentDetails({
       <div className="mt-5 max-w-[450px] ">
         {delivery === 'international' && carrier === 'courier' && (
           <>
-            <h1 className="text-lg mt-3 mb-3">
+            <h5 className="mt-3 mb-3">
               Where can the courier pick up your shipment?
-            </h1>
+            </h5>
             <div onClick={() => handleMapOpen('int')}>
               <AddressInput
                 inputname="pickupAddress"
@@ -119,9 +119,9 @@ export function ShipmentDetails({
         )}
         {delivery === 'baltics' && carrier === 'courier' && (
           <>
-            <h1 className="text-lg mt-3 mb-3">
+            <h5 className="mt-3 mb-3">
               Where can the courier pick up your shipment?
-            </h1>
+            </h5>
             <div onClick={() => handleMapOpen('int')}>
               <AddressInput
                 inputname="pickupAddress"
@@ -138,9 +138,9 @@ export function ShipmentDetails({
           </>
         )}
         <div>
-          <h1 className="text-lg mt-3 mb-3">
+          <h5 className="text-lg mt-3 mb-3">
             Where are you sending your parcel?
-          </h1>
+          </h5>
           <>
             {delivery === 'international' && (
               <div onClick={() => handleMapOpen('int')}>
@@ -204,7 +204,7 @@ export function ShipmentDetails({
         </div>
         {sendAddress && (
           <div>
-            <h1 className="text-lg mt-4 mb-3">What size is your shipment?</h1>
+            <h5 className="mt-4 mb-3">What size is your shipment?</h5>
             <ShipmentSize
               onSelect={handleShimpent}
               selectedShipment={shipment}

@@ -1,9 +1,7 @@
-import Image from 'next/image';
-
 export function Footer() {
   return (
     <footer>
-      <div className="flex justify-between mt-8">
+      <div className="flex justify-end mt-8">
         <div>
           <ul className="flex gap-3">
             <li className="text-hover">Instagram</li>

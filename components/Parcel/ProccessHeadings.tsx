@@ -14,10 +14,10 @@ export function ProccessHeadings({
 
   return (
     <div className="flex mt-4 px-4 justify-between">
-      <h1>
+      <p>
         <span className={numberClass}>{number}</span>
         {heading}
-      </h1>
+      </p>
       {status.completed && (
         <span className="hover:opacity-60 cursor-pointer" onClick={handleClick}>
           Edit
