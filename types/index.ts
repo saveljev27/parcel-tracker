@@ -69,3 +69,12 @@ export interface PlaceAutocompleteProps {
   inputname: string;
   placeholder: string;
 }
+
+export interface ShipmentsProps {
+  shipments: {
+    id: string;
+    carrier: string;
+    sendAddress: string;
+    createdAt: Date;
+  };
+}

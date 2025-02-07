@@ -11,28 +11,30 @@ export async function createShipment(formData: FormData): Promise<Shipment> {
     where: { email: data.senderEmail as string },
   });
 
-  const shipmentData: Omit<Shipment, 'id' | 'createdAt' | 'updatedAt'> = {
-    carrier: data.carrier as string,
-    delivery: data.delivery as string,
-    pickupAddress: data.pickupAddress ? (data.pickupAddress as string) : null,
-    balticCountry: data.balticCountry ? (data.balticCountry as string) : null,
-    receiverName: data.receiverName as string,
-    receiverPhone: data.receiverPhone as string,
-    sendAddress: data.sendAddress as string,
-    senderEmail: data.senderEmail as string,
-    senderName: data.senderName as string,
-    senderPhone: data.senderPhone as string,
-    shipmentSize: data.shipmentSize as string,
-    totalPrice: parseFloat(data.totalPrice as string) || 0,
-    payStatus: true as boolean,
-    userId: userExist ? (userExist.id as string) : null,
-  };
-
   let shipmentId;
 
   try {
     const shipment = await prisma.shipment.create({
-      data: shipmentData,
+      data: {
+        carrier: data.carrier as string,
+        delivery: data.delivery as string,
+        pickupAddress: data.pickupAddress
+          ? (data.pickupAddress as string)
+          : null,
+        balticCountry: data.balticCountry
+          ? (data.balticCountry as string)
+          : null,
+        receiverName: data.receiverName as string,
+        receiverPhone: data.receiverPhone as string,
+        sendAddress: data.sendAddress as string,
+        senderEmail: data.senderEmail as string,
+        senderName: data.senderName as string,
+        senderPhone: data.senderPhone as string,
+        shipmentSize: data.shipmentSize as string,
+        totalPrice: parseFloat(data.totalPrice as string) || 0,
+        payStatus: true as boolean,
+        userId: userExist ? (userExist.id as string) : null,
+      },
     });
     shipmentId = shipment.id;
 
@@ -40,8 +42,8 @@ export async function createShipment(formData: FormData): Promise<Shipment> {
       await prisma.user.update({
         where: { id: userExist.id },
         data: {
-          shipmentsIds: {
-            push: shipmentId as string,
+          shipments: {
+            connect: { id: shipmentId },
           },
         },
       });
